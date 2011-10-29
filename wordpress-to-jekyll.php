@@ -129,7 +129,14 @@ interface YamlDumperInterface {
 
 }
 
-require('SymfonyComponents/YAML/sfYaml.php');
+$sfyaml = __DIR__.'/vendor/yaml/lib/sfYaml.php';
+
+if ( ! file_exists($sfyaml))
+{
+	throw new Exception('Symfony yaml was not found. You may need to initialise the git submodules: git submodule update --init --recursive');
+}
+
+require($sfyaml);
 
 class YamlDumper implements YamlDumperInterface {
 	
@@ -142,7 +149,7 @@ class YamlDumper implements YamlDumperInterface {
 
 }
 
-$file = (isset($argv[1])) ? $argv[1] : getcwd().'/wordpress-export.xml';
+$file = (isset($argv[1])) ? $argv[1] : getcwd().'/export.xml';
 $build = (isset($argv[2])) ? $argv[2] : getcwd().'/posts';
 
 $convert = new WordpressToJekyll($file, new YamlDumper, $build);
